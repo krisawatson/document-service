@@ -1,0 +1,43 @@
+buildscript {
+    repositories {
+        mavenCentral()
+
+    }
+    dependencies {
+        classpath('org.yaml:snakeyaml:1.18')
+    }
+}
+
+apply plugin: 'docker'
+
+import org.yaml.snakeyaml.Yaml
+
+group = 'watsonsoftware'
+
+Yaml yaml = new Yaml()
+File yamlFile = new File('src/main/resources/application.yaml')
+Map properties = (Map) yaml.load(yamlFile.text)
+
+def appName = properties['spring']['application']['name']
+def release = properties['spring']['application']['release']
+def dockerRepo = 'krisawatson'
+
+task buildDocker(type: Docker, dependsOn: build) {
+    dockerfile = file('src/main/docker/Dockerfile')
+    tag = dockerRepo + "/" + appName
+    push = true
+    doFirst {
+        copy {
+            from jar
+            into stageDir
+        }
+    }
+}
+
+task helm() {
+    doLast {
+        exec {
+            commandLine "helm", "upgrade", "--install", "$release", "./src/main/helm"
+        }
+    }
+}

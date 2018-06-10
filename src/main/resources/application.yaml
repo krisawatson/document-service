@@ -1,0 +1,14 @@
+server:
+  port: 8003
+  servlet:
+    context-path: "/doc/v1"
+
+logging:
+  level:
+    com.watsonsoftware: INFO
+
+# Data source properties
+spring:
+  application:
+    name: document-service
+    release: doc-dev

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "fullname" . }}-{{ .Values.statefulset.version }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "name" . }}
+      release: {{ .Release.Name }}
+  serviceName: {{ .Chart.Name }}-{{ .Values.service.version }}
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}/{{ .Values.service.name }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+          name: http
+        env:
+        - name: DOC_DB_PROPERTIES
+          value: file:{{ .Values.volume.dbPropPath}}/{{ .Values.volume.dbPropFile}}
+        volumeMounts:
+        - name: {{ .Values.statefulset.mountName }}
+          mountPath: {{ .Values.statefulset.path }}
+        - name: db-properties
+          mountPath: {{ .Values.volume.dbPropPath}}
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Values.statefulset.mountName }}
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "storage-class"
+      resources:
+        requests:
+          storage: 1Gi
+
