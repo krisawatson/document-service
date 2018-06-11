@@ -1,4 +1,4 @@
-apiVersion: apps/v1
+apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
   name: {{ template "fullname" . }}-{{ .Values.statefulset.version }}
@@ -31,17 +31,21 @@ spec:
         - name: DOC_DB_PROPERTIES
           value: file:{{ .Values.volume.dbPropPath}}/{{ .Values.volume.dbPropFile}}
         volumeMounts:
-        - name: {{ .Values.statefulset.mountName }}
-          mountPath: {{ .Values.statefulset.path }}
-        - name: db-properties
+        - name: {{ .Values.storage.mountName }}
+          mountPath: {{ .Values.storage.path }}
+        - name: doc-db-properties
           mountPath: {{ .Values.volume.dbPropPath}}
+      volumes:
+      - name: doc-db-properties
+        secret:
+          secretName: doc-db-properties
   volumeClaimTemplates:
   - metadata:
-      name: {{ .Values.statefulset.mountName }}
+      name: {{ .Values.storage.mountName}}
+      annotations:
+        volume.beta.kubernetes.io/storage-class: {{ .Values.storage.className }}
     spec:
       accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "storage-class"
       resources:
         requests:
           storage: 1Gi
-

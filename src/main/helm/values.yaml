@@ -13,9 +13,11 @@ service:
   internalPort: 8003
   version: 1
 statefulset:
-  path: /mnt/storage
-  mountName: storage
   version: 1
+storage:
+  className: standard
+  mountName: storage
+  path: /tmp/storage
 volume:
   dbPropPath: /etc/properties
   dbPropFile: doc-db.properties
