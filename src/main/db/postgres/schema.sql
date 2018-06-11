@@ -3,7 +3,7 @@ CREATE SCHEMA IF NOT EXISTS document_details;
 
 CREATE TABLE IF NOT EXISTS document_details."document"
 (
-	doc_id bigint not null,
+	doc_id bigint primary key,
 	name varchar(64) not null,
 	type varchar(32) not null,
 	storage_location varchar(1024) not null,
