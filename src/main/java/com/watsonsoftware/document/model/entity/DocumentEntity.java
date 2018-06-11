@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class DocumentEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "doc_id", unique = true, nullable = false, updatable = false)
     private Long docId;
