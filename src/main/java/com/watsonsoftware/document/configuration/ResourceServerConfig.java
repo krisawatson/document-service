@@ -43,8 +43,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                         "/webjars/**",
                         "/swagger-ui.html"
                 ).permitAll()
-                .antMatchers(HttpMethod.GET, "/document/{.+}").hasAnyAuthority("document.read")
-                .antMatchers(HttpMethod.POST, "/document/{.+}").hasAnyAuthority("document.write")
+                .antMatchers(HttpMethod.GET, "/document/*").hasAnyAuthority("document.read")
+                .antMatchers(HttpMethod.POST, "/document/*").hasAnyAuthority("document.write")
                 .anyRequest().authenticated();
     }
 

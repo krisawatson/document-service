@@ -30,6 +30,8 @@ spec:
         env:
         - name: DOC_DB_PROPERTIES
           value: file:{{ .Values.volume.dbPropPath}}/{{ .Values.volume.dbPropFile}}
+        - name: STORAGE
+          value: {{ .Values.storage.path }}
         volumeMounts:
         - name: {{ .Values.storage.mountName }}
           mountPath: {{ .Values.storage.path }}

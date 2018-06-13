@@ -30,4 +30,14 @@ public class ExceptionControllerAdvice {
                 .message("Do not have permission for request")
                 .build();
     }
+
+    @ExceptionHandler({FileException.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public ErrorResponse handleFileException() {
+        return ErrorResponse.builder()
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .message("Failure while processing file")
+                .build();
+    }
 }

@@ -41,6 +41,7 @@ public class Document extends ResourceSupport {
                 .type(this.type)
                 .storageLocation(this.storageLocation)
                 .size(this.size)
+                .ownerId(this.ownerId)
                 .created(LocalDateTime.now())
                 .build();
     }
