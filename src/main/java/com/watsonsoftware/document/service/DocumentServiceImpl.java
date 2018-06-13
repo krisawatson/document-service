@@ -2,6 +2,7 @@ package com.watsonsoftware.document.service;
 
 import com.watsonsoftware.document.controller.DocumentController;
 import com.watsonsoftware.document.exception.FileException;
+import com.watsonsoftware.document.exception.NotFoundException;
 import com.watsonsoftware.document.model.dto.Document;
 import com.watsonsoftware.document.model.entity.DocumentEntity;
 import com.watsonsoftware.document.repository.DocumentRepository;
@@ -61,8 +62,12 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public File getDocumentFile(final Integer docId, final String ownerId) {
-        DocumentEntity documentEntity = documentRepository.findOneByDocIdAndOwnerId(docId, ownerId);
-        return new File(documentEntity.getStorageLocation());
+        try {
+            DocumentEntity documentEntity = documentRepository.findOneByDocIdAndOwnerId(docId, ownerId);
+            return new File(documentEntity.getStorageLocation());
+        } catch (NullPointerException e) {
+            throw new NotFoundException("File does not exists");
+        }
     }
 
     private Document extractDocumentFromEntity(final DocumentEntity documentEntity) {
