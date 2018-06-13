@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 public class Document extends ResourceSupport {
 
-    private Long docId;
+    private Integer docId;
 
     @NotNull
     private String name;

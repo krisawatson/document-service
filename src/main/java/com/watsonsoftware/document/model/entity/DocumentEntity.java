@@ -21,7 +21,7 @@ public class DocumentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "doc_id", unique = true, nullable = false, updatable = false)
-    private Long docId;
+    private Integer docId;
 
     @Column(name = "name", nullable = false)
     private String name;

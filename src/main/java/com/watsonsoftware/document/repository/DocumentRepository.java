@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface DocumentRepository extends
         JpaRepository<DocumentEntity, Integer> {
 
-    DocumentEntity findOneByDocIdAndOwnerId(Long docId, String ownerId);
+    DocumentEntity findOneByDocIdAndOwnerId(Integer docId, String ownerId);
 
 }

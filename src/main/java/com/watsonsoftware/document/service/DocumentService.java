@@ -6,9 +6,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface DocumentService {
 
-    Document getDocument(final Long docId);
+    Document getDocument(final Integer docId, final String ownerId);
 
     Resources<Document> getAllDocuments();
 
-    Long storeDocument(final MultipartFile file);
+    Integer storeDocument(final String ownerId, final MultipartFile file);
 }
