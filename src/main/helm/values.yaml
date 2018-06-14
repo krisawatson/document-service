@@ -15,9 +15,15 @@ service:
 statefulset:
   version: 1
 storage:
+  accessModes: ReadWriteOnce
+  claimName: doc-storage-pv-claim
+  claimSize: 1Gi
   className: standard
   mountName: storage
   path: /tmp/storage
+  type: local
+  volumeName: doc-storage-pv
+  volumeSize: 2Gi
 volume:
   dbPropPath: /etc/properties
   dbPropFile: doc-db.properties

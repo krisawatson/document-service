@@ -27,6 +27,26 @@ spec:
         ports:
         - containerPort: {{ .Values.service.internalPort }}
           name: http
+        livenessProbe:
+          httpGet:
+            path: /doc/v1/actuator/health
+            port: {{ .Values.service.internalPort }}
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 10
+          successThreshold: 1
+          failureThreshold: 10
+        readinessProbe:
+          httpGet:
+            path: /doc/v1/actuator/health
+            port: {{ .Values.service.internalPort }}
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 10
+          successThreshold: 1
+          failureThreshold: 10
         env:
         - name: DOC_DB_PROPERTIES
           value: file:{{ .Values.volume.dbPropPath}}/{{ .Values.volume.dbPropFile}}
@@ -41,13 +61,16 @@ spec:
       - name: doc-db-properties
         secret:
           secretName: doc-db-properties
-  volumeClaimTemplates:
-  - metadata:
-      name: {{ .Values.storage.mountName}}
-      annotations:
-        volume.beta.kubernetes.io/storage-class: {{ .Values.storage.className }}
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
+      - name: {{ .Values.storage.mountName }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.storage.claimName }}
+  # volumeClaimTemplates:
+  # - metadata:
+  #     name: {{ .Values.storage.mountName}}
+  #     annotations:
+  #       volume.beta.kubernetes.io/storage-class: {{ .Values.storage.className }}
+  #   spec:
+  #     accessModes: [ "ReadWriteOnce" ]
+  #     resources:
+  #       requests:
+  #         storage: 1Gi
