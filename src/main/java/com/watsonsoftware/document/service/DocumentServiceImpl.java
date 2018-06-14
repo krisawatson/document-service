@@ -6,6 +6,7 @@ import com.watsonsoftware.document.exception.NotFoundException;
 import com.watsonsoftware.document.model.dto.Document;
 import com.watsonsoftware.document.model.entity.DocumentEntity;
 import com.watsonsoftware.document.repository.DocumentRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resources;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
+@Slf4j
 @Service
 public class DocumentServiceImpl implements DocumentService {
 
@@ -41,11 +43,13 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public Integer storeDocument(final String ownerId, final MultipartFile multipart) {
-        String storage = System.getenv("STORAGE");
-        File convFile = new File(storage + File.separator + multipart.getOriginalFilename());
+        File destination = buildDestinationFile(ownerId, multipart.getOriginalFilename());
         try {
-            multipart.transferTo(convFile);
+            log.info("Copying file " + destination.getName());
+            destination.getParentFile().mkdirs();
+            multipart.transferTo(destination);
         } catch (IOException e) {
+            log.error("Failed to copy file " + e.getLocalizedMessage());
             throw new FileException("Failed to transfer file");
         }
 
@@ -53,7 +57,7 @@ public class DocumentServiceImpl implements DocumentService {
                 .name(multipart.getOriginalFilename())
                 .type(multipart.getContentType())
                 .size(multipart.getSize())
-                .storageLocation(convFile.getAbsolutePath())
+                .storageLocation(destination.getAbsolutePath())
                 .ownerId(ownerId)
                 .build();
         final DocumentEntity documentEntity = documentRepository.save(document.toDocumentEntity());
@@ -91,5 +95,10 @@ public class DocumentServiceImpl implements DocumentService {
         return new Resources<Document>(documents, linkTo(
                 methodOn(DocumentController.class)
                         .getAllDocuments()).withSelfRel());
+    }
+
+    private File buildDestinationFile(final String ownerId, final String filename) {
+        return new File(System.getenv("STORAGE") + File.separator
+                + ownerId + File.separator + filename);
     }
 }

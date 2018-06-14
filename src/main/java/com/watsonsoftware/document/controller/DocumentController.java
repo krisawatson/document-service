@@ -68,7 +68,6 @@ public class DocumentController {
     }
 
     private String getOwnerId() {
-        log.info(SecurityContextHolder.getContext().getAuthentication().getName());
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }
