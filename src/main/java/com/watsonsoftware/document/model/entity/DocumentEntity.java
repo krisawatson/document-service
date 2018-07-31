@@ -1,13 +1,11 @@
 package com.watsonsoftware.document.model.entity;
 
-import com.watsonsoftware.document.util.TimestampConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name = "document", schema = "document_details")
-public class DocumentEntity {
+public class DocumentEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,12 +35,4 @@ public class DocumentEntity {
 
     @Column(name = "owner_id", nullable = false)
     private String ownerId;
-
-    @Column(name = "created", nullable = false)
-    @Convert(converter = TimestampConverter.class)
-    private LocalDateTime created;
-
-    @Column(name = "updated")
-    @Convert(converter = TimestampConverter.class)
-    private LocalDateTime updated;
 }

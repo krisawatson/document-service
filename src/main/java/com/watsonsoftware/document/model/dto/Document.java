@@ -7,7 +7,6 @@ import lombok.*;
 import org.springframework.hateoas.ResourceSupport;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 @JsonInclude(Include.NON_NULL)
 @Data
@@ -42,7 +41,6 @@ public class Document extends ResourceSupport {
                 .storageLocation(this.storageLocation)
                 .size(this.size)
                 .ownerId(this.ownerId)
-                .created(LocalDateTime.now())
                 .build();
     }
 

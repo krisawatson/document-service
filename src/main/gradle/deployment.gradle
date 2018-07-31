@@ -24,6 +24,9 @@ def dockerRepo = 'krisawatson'
 
 task buildDocker(type: Docker, dependsOn: build) {
     dockerfile = file('src/main/docker/Dockerfile')
+    if (project.hasProperty("buildType")){
+        dockerfile = file("src/main/docker/$buildType/Dockerfile")
+    }
     tag = dockerRepo + "/" + appName
     push = true
     doFirst {
